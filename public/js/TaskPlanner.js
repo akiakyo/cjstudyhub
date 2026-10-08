@@ -202,6 +202,7 @@ export class TaskPlanner {
     $("#cheer-copy").textContent = allDone
       ? "All tasks done. You earned a happy dance."
       : "And yes, taking a break counts too.";
+    this.app.progress?.render();
     icons();
   }
   changeDay(n) {

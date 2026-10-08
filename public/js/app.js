@@ -1,3 +1,9 @@
+import { SubjectDropdown } from "./SubjectDropdown.js";
+import { ExamPlanner, FlashcardDeck, DosagePractice } from "./StudyTools.js";
+import { ProgressJournal } from "./ProgressJournal.js";
+import { PersonalLetters } from "./PersonalLetters.js";
+import { HubExperience } from "./HubExperience.js";
+import { DeadlineCalendar } from "./DeadlineCalendar.js";
 import { TaskPlanner } from "./TaskPlanner.js";
 import { StreakController } from "./StreakController.js";
 import { FocusTimer } from "./FocusTimer.js";
@@ -10,6 +16,7 @@ import { RollingCounter } from "./RollingCounter.js";
 export class StudyHubApp {
   constructor() {
     this.tasks = new TaskPlanner(this);
+    this.deadlines = new DeadlineCalendar(this);
     this.streak = new StreakController(this);
     this.timer = new FocusTimer(this);
     this.notes = new StickyNoteController(this);
@@ -17,6 +24,13 @@ export class StudyHubApp {
     this.sound = new SoundManager(this);
     this.love = new LoveQuestion(this);
     this.counter = new RollingCounter(this);
+    this.exams = new ExamPlanner(this);
+    this.flashcards = new FlashcardDeck(this);
+    this.subjectDropdown = new SubjectDropdown();
+    this.practice = new DosagePractice();
+    this.progress = new ProgressJournal(this);
+    this.letters = new PersonalLetters(this);
+    this.experience = new HubExperience(this);
   }
   init() {
     this.counter.init();
@@ -27,6 +41,15 @@ export class StudyHubApp {
     this.notes.init();
     this.timer.init();
     this.love.init();
+    this.deadlines.init();
+    this.exams.init();
+    this.flashcards.init();
+    this.subjectDropdown.init();
+    this.practice.init();
+    this.letters.init();
+    this.progress.init();
+    this.experience.init();
   }
 }
-new StudyHubApp().init();
+export const studyHub = new StudyHubApp();
+studyHub.init();

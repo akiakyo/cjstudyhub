@@ -1912,3 +1912,275 @@ footer {
     font-size: 12px;
   }
 }
+
+/* Interactive deadline calendar */
+.deadline-card {
+  margin-top: 30px;
+  padding: 30px;
+  background: #faf1f6;
+  border-radius: 32px;
+  box-shadow: var(--clay-shadow);
+}
+.calendar-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 20px;
+}
+.calendar-toolbar h3 {
+  margin: 0;
+  font-size: 20px;
+}
+.calendar-toolbar .today-button {
+  display: block;
+  margin-left: auto;
+}
+.deadline-action {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 34px;
+  min-height: 34px;
+  border-radius: 12px;
+  padding: 8px;
+  background: #f8e4ef;
+  color: #98607c;
+  box-shadow: var(--clay-small);
+  font-size: 13px;
+}
+.calendar-weekdays,
+.deadline-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+}
+.calendar-weekdays {
+  margin-bottom: 10px;
+  text-align: center;
+  color: #94798c;
+  font-size: 13px;
+}
+.calendar-day {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  min-height: 90px;
+  min-width: 0;
+  padding: 10px 7px;
+  background: #f8ebf3;
+  border: 2px solid transparent;
+  border-radius: 15px;
+  box-shadow: var(--clay-small);
+  text-align: left;
+}
+.calendar-day:hover {
+  transform: translateY(-2px);
+}
+.calendar-day.outside {
+  background: #f0e3ec;
+  color: #9d8898;
+}
+.calendar-day.selected {
+  border-color: #c877a1;
+  background: #ffe9f4;
+}
+.calendar-day.is-today .calendar-number {
+  color: #b64066;
+  font-weight: 800;
+}
+.calendar-number {
+  font-size: 14px;
+}
+.calendar-chip {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 6px;
+  padding: 4px;
+  font-size: 11px;
+  color: #733c58;
+  background: #f3c3da;
+}
+.calendar-chip.red {
+  background: #ffd1d6;
+  color: #a2344b;
+}
+.calendar-chip.blue {
+  background: #c8e7fb;
+  color: #276385;
+}
+.calendar-chip.purple {
+  background: #e2cef5;
+  color: #755392;
+}
+.calendar-chip.completed {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+.deadline-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+.deadline-list-heading h3 {
+  font-size: 18px;
+  margin: 0;
+}
+.deadline-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #faf0f6;
+  border-radius: 17px;
+  box-shadow: var(--clay-small);
+  padding: 15px;
+  margin-top: 14px;
+}
+.deadline-row input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #bf6a96;
+  flex-shrink: 0;
+}
+.deadline-info {
+  flex: 1;
+  min-width: 0;
+}
+.deadline-info strong {
+  display: block;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.deadline-info span {
+  display: block;
+  font-size: 13px;
+  color: #9a7e90;
+  margin-top: 5px;
+}
+.deadline-info span.past-due {
+  color: #ac445b;
+}
+.deadline-row.done strong {
+  text-decoration: line-through;
+  color: #9c8595;
+}
+.deadline-empty {
+  font-size: 14px;
+  color: #9a7e90;
+  padding: 15px 0;
+}
+#deadline-dialog {
+  padding: 0;
+  border: 0;
+  background: #faeef5;
+  color: var(--ink);
+  border-radius: 28px;
+  width: min(450px, calc(100% - 32px));
+  box-shadow: var(--clay-shadow);
+  max-height: 90dvh;
+  overflow: auto;
+}
+#deadline-dialog::backdrop {
+  background: #49334455;
+  backdrop-filter: blur(9px);
+}
+#deadline-dialog[open] {
+  animation: note-in 0.3s ease;
+}
+.deadline-editor {
+  padding: 26px;
+}
+.deadline-editor label,
+.deadline-editor legend {
+  font-size: 14px;
+  color: #885d73;
+}
+.deadline-colors {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  border: 0;
+  padding: 5px 0 18px;
+}
+.deadline-colors input[type="radio"] {
+  width: auto;
+  margin: 0;
+  box-shadow: none;
+  accent-color: #b86691;
+}
+.deadline-colors label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.deadline-editor .form-actions {
+  margin-top: 15px;
+}
+@media (max-width: 600px) {
+  .deadline-card {
+    padding: 22px 14px;
+    border-radius: 26px;
+  }
+  .deadline-card h2 {
+    font-size: 20px;
+  }
+  .deadline-card .primary {
+    font-size: 12px;
+    padding: 11px;
+  }
+  .calendar-toolbar {
+    gap: 8px;
+  }
+  .calendar-toolbar h3 {
+    font-size: 17px;
+  }
+  .calendar-weekdays,
+  .deadline-grid {
+    gap: 4px;
+  }
+  .calendar-day {
+    min-height: 62px;
+    padding: 6px 3px;
+    border-radius: 10px;
+  }
+  .calendar-chip {
+    font-size: 0;
+    height: 5px;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .calendar-number {
+    font-size: 12px;
+  }
+  .calendar-day small {
+    font-size: 9px;
+  }
+  .deadline-row {
+    gap: 8px;
+    padding: 12px 10px;
+  }
+  .deadline-info strong {
+    font-size: 14px;
+  }
+  .deadline-info span {
+    font-size: 12px;
+  }
+  .deadline-row .deadline-action {
+    min-width: 30px;
+    padding: 6px;
+  }
+  .deadline-list-heading h3 {
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

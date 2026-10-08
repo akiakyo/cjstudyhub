@@ -18,12 +18,7 @@ export class StickyNoteController {
     this.messageBag = [];
     this.noteModal = $("#aky-modal");
     $("#aky-open").onclick = () => {
-      if (this.noteModal.open) return;
-      this.noteModal.classList.remove("closing");
-      $("#aky-message").textContent = this.nextMessage();
-      this.noteModal.showModal();
-      icons();
-      this.preparePaper();
+      this.openMessage(this.nextMessage());
     };
     $("#aky-close").onclick = this.closeNote;
     this.noteModal.addEventListener("cancel", (e) => {
@@ -57,6 +52,14 @@ export class StickyNoteController {
       cleanup?.();
       this.noteModal.classList.remove("paper-ready");
     });
+  }
+  openMessage(message) {
+    if (this.noteModal.open) return;
+    this.noteModal.classList.remove("closing");
+    $("#aky-message").textContent = message;
+    this.noteModal.showModal();
+    icons();
+    this.preparePaper();
   }
   nextMessage() {
     if (!this.messageBag.length) {
@@ -122,7 +125,10 @@ export class StickyNoteController {
       ctx.fillStyle = "#805932";
       ctx.font = "bold 52px Georgia";
       ctx.fillText("from aky :)", 62, 135);
-      ctx.font = "38px Georgia";
+      ctx.font =
+        $("#aky-message").textContent.length > 100
+          ? "30px Georgia"
+          : "38px Georgia";
       ctx.fillStyle = "#674b37";
       let words = $("#aky-message").textContent.split(" "),
         line = "",
@@ -132,7 +138,7 @@ export class StickyNoteController {
         if (ctx.measureText(test).width > 710 && line) {
           ctx.fillText(line, 62, y);
           line = word + " ";
-          y += 63;
+          y += 50;
         } else line = test;
       }
       ctx.fillText(line, 62, y);

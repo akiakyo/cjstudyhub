@@ -13,6 +13,17 @@
     <title>CJ's Study Hub</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="assets/paper-crumple.css" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="hub.css" />
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem("cj-theme") ||
+          (matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light");
+      } catch {}
+    </script>
   </head>
   <body>
     <header>
@@ -26,6 +37,13 @@
       >
       <div class="header-actions">
         <button
+          class="sound-toggle"
+          id="theme-toggle"
+          aria-label="Switch to dark mode"
+        >
+          <i data-lucide="moon"></i>
+        </button>
+        <button
           id="sound-toggle"
           class="sound-toggle"
           aria-label="Mute sounds"
@@ -37,45 +55,76 @@
         </button>
       </div>
     </header>
+    <nav class="hub-nav" aria-label="Study hub">
+      <button data-tab="today" aria-current="page">
+        <i data-lucide="house"></i>Today</button
+      ><button data-tab="focus"><i data-lucide="timer"></i>Focus</button
+      ><button data-tab="review"><i data-lucide="layers"></i>Review</button
+      ><button data-tab="us"><i data-lucide="heart"></i>Us</button>
+    </nav>
     <main>
-      <div class="intro">
-        <div>
-          <h1>Small steps.<br /><em>Big brain energy.</em></h1>
-          <p>Hi, my future nurse! Let's make today a good study day.</p>
-        </div>
-        <div class="intro-sticker">
-          <img src="assets/smirk.gif" alt="A cheeky white hamster" /><span
-            >u got this, ganda &lt;3</span
-          >
-        </div>
-      </div>
-      <div class="day-bar">
-        <button id="prev-day" aria-label="Previous day">
-          <i data-lucide="chevron-left" aria-hidden="true"></i>
-        </button>
-        <div>
-          <strong id="day-title">Today</strong><span id="date-label"></span>
-        </div>
-        <button id="next-day" aria-label="Next day">
-          <i data-lucide="chevron-right" aria-hidden="true"></i></button
-        ><button id="today" class="today-button">Back to today</button>
-        <div class="streak-wrap">
-          <button
-            id="streak"
-            class="streak"
-            aria-expanded="false"
-            aria-describedby="streak-tip"
-          >
-            <i data-lucide="flame" aria-hidden="true"></i
-            ><strong id="streak-count">0</strong>
-          </button>
-          <div id="streak-tip" class="streak-tip" role="tooltip">
-            <strong id="streak-detail">0 day streak</strong
-            ><span id="streak-hint">Complete a task today to start.</span>
+      <div data-panel="today" id="today-panel">
+        <div class="intro">
+          <div>
+            <h1 id="first-hero">
+              Small steps.<br /><em>Big brain energy.</em>
+            </h1>
+            <p id="greeting">
+              Hi, my future nurse! Let's make today a good study day.
+            </p>
+          </div>
+          <div class="intro-sticker">
+            <img src="assets/smirk.gif" alt="A cheeky white hamster" /><span
+              >u got this, ganda &lt;3</span
+            >
           </div>
         </div>
-      </div>
-      <div class="workspace">
+        <div class="day-bar">
+          <button id="prev-day" aria-label="Previous day">
+            <i data-lucide="chevron-left" aria-hidden="true"></i>
+          </button>
+          <div>
+            <strong id="day-title">Today</strong><span id="date-label"></span>
+          </div>
+          <button id="next-day" aria-label="Next day">
+            <i data-lucide="chevron-right" aria-hidden="true"></i></button
+          ><button id="today" class="today-button">Back to today</button>
+          <div class="streak-wrap">
+            <button
+              id="streak"
+              class="streak"
+              aria-expanded="false"
+              aria-describedby="streak-tip"
+            >
+              <i data-lucide="flame" aria-hidden="true"></i
+              ><strong id="streak-count">0</strong>
+            </button>
+            <div id="streak-tip" class="streak-tip" role="tooltip">
+              <strong id="streak-detail">0 day streak</strong
+              ><span id="streak-hint">Complete a task today to start.</span>
+            </div>
+          </div>
+        </div>
+        <div class="dashboard-cards">
+          <section class="clay compact-card">
+            <i data-lucide="calendar-heart"></i>
+            <div>
+              <span class="eyebrow">NEXT EXAM</span
+              ><strong id="exam-countdown">Your next chapter awaits.</strong
+              ><button id="exam-jump" class="text-button">
+                Set an exam date
+              </button>
+            </div>
+          </section>
+          <section class="clay compact-card">
+            <i data-lucide="timer"></i>
+            <div>
+              <span class="eyebrow">A SMALL FOCUS MOMENT</span
+              ><strong id="mini-time">25:00</strong
+              ><button id="mini-start" class="text-button">Start focus</button>
+            </div>
+          </section>
+        </div>
         <section class="planner">
           <div class="section-heading">
             <div>
@@ -98,20 +147,21 @@
             ><button data-filter="pending">To do</button
             ><button data-filter="done">Completed</button>
           </div>
-          <form id="task-form" hidden>
+          <form id="task-form" hidden="">
             <label for="task-title">What are we working on?</label
             ><input
               id="task-title"
               placeholder="e.g. Review chapter 3"
               maxlength="120"
-              required
+              required=""
             />
             <div class="form-row">
               <label
                 >Subject<input
                   id="task-subject"
-                  placeholder="e.g. Mathematics"
+                  placeholder="e.g. Anatomy, Pharma, NCM"
                   maxlength="40"
+                  list="subjects"
               /></label>
               <div class="priority-field">
                 <label id="priority-label">Priority</label
@@ -131,7 +181,7 @@
                     id="priority-options"
                     role="listbox"
                     aria-labelledby="priority-label"
-                    hidden
+                    hidden=""
                   >
                     <button
                       type="button"
@@ -174,71 +224,398 @@
             <p>Your pace is a good pace. Keep going.</p>
           </div>
         </section>
-        <aside>
-          <section class="focus-card">
-            <div class="section-heading">
-              <h2>Time to focus</h2>
-              <span><i data-lucide="clock-3" aria-hidden="true"></i></span>
-            </div>
-            <div class="timer-tabs">
-              <button class="active" data-minutes="25">Focus</button
-              ><button data-minutes="5">Short break</button
-              ><button data-minutes="15">Long break</button>
-            </div>
-            <div class="focus-buddy">
-              <img
-                src="assets/tongue.gif"
-                alt="A playful hamster reminding you to take a breath"
-              /><span>focus face: activated</span>
-            </div>
-            <div class="timer-ring">
-              <div>
-                <span id="timer">25:00</span
-                ><small id="timer-label">a little focus goes a long way</small>
-              </div>
-            </div>
-            <div class="timer-actions">
-              <button id="start" class="primary">
-                <i data-lucide="play" aria-hidden="true"></i> Start focus</button
-              ><button id="reset" aria-label="Reset timer">
-                <i data-lucide="rotate-ccw" aria-hidden="true"></i>
-              </button>
-            </div>
-            <p id="session-note">Ready when you are.</p>
-          </section>
-          <section class="cheer-card">
-            <img
-              id="cheer-image"
-              src="assets/party.gif"
-              alt="Happy dancing hamster"
-            />
+        <section class="deadline-card" aria-labelledby="deadlines-heading">
+          <div class="section-heading">
             <div>
-              <span class="eyebrow">YOUR PERSONAL HYPE HAMSTER</span>
-              <h3 id="cheer-title">You can do hard things.</h3>
-              <p id="cheer-copy">And yes, taking a break counts too.</p>
+              <span class="eyebrow">PLAN AHEAD</span>
+              <h2 id="deadlines-heading">Deadlines</h2>
             </div>
-          </section>
-        </aside>
-      </div>
-      <section class="love-card" aria-labelledby="love-question">
-        <div class="love-copy">
-          <span class="eyebrow">A LITTLE QUESTION</span>
-          <h2 id="love-question">do you love me ba -aky?</h2>
-          <p id="love-answer" aria-live="polite">be honest, ganda &lt;3</p>
-        </div>
-        <div class="love-playground">
-          <button id="love-yes" class="primary">YES &lt;3</button>
-          <div id="dodge-field">
-            <button id="love-no" class="love-no">NO</button>
+            <button id="deadline-add" class="primary">
+              <i data-lucide="plus" aria-hidden="true"></i> Add deadline
+            </button>
           </div>
-        </div>
-      </section>
+          <div class="calendar-toolbar">
+            <button
+              id="deadline-prev"
+              class="deadline-action"
+              aria-label="Previous month"
+            >
+              <i data-lucide="chevron-left" aria-hidden="true"></i>
+            </button>
+            <h3 id="deadline-month"></h3>
+            <button
+              id="deadline-next"
+              class="deadline-action"
+              aria-label="Next month"
+            >
+              <i data-lucide="chevron-right" aria-hidden="true"></i></button
+            ><button id="deadline-today" class="today-button">Today</button>
+          </div>
+          <div class="calendar-weekdays" aria-hidden="true">
+            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span
+            ><span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+          <div
+            id="deadline-grid"
+            class="deadline-grid"
+            aria-label="Deadline calendar"
+          ></div>
+          <div class="deadline-list-heading">
+            <h3 id="deadline-list-title">All deadlines</h3>
+            <button id="deadline-all" class="deadline-action">Show all</button>
+          </div>
+          <div id="deadline-list"></div>
+        </section>
+        <section class="clay">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">ONE DAY AT A TIME</span>
+              <h2>Exams &amp; board exam</h2>
+            </div>
+          </div>
+          <form id="exam-form" class="inline-form">
+            <label
+              >Exam name<input
+                id="exam-name"
+                required=""
+                maxlength="80"
+                placeholder="Pharma exam or board exam" /></label
+            ><label
+              >Exam date<input id="exam-date" type="date" required="" /></label
+            ><button class="primary" type="submit" id="exam-save">
+              Add exam</button
+            ><button type="button" id="exam-cancel" hidden="">
+              Cancel edit
+            </button>
+          </form>
+          <div id="exam-list" class="record-list"></div>
+        </section>
+      </div>
+      <div data-panel="focus" id="focus-panel" hidden="">
+        <section class="focus-card">
+          <div class="section-heading">
+            <h2>Time to focus</h2>
+            <span><i data-lucide="clock-3" aria-hidden="true"></i></span>
+          </div>
+          <div class="timer-tabs">
+            <button class="active" data-minutes="25">Focus</button
+            ><button data-minutes="5">Short break</button
+            ><button data-minutes="15">Long break</button>
+          </div>
+          <div>
+            <label class="timer-subject-label" for="focus-subject"
+              >What subject are you focusing on?</label
+            ><input
+              id="focus-subject"
+              list="subjects"
+              maxlength="40"
+              placeholder="e.g. Pharma"
+            /><button id="exit-focus" class="text-button" hidden="">
+              <i data-lucide="minimize-2"></i> Leave focus view
+            </button>
+          </div>
+          <div class="focus-buddy">
+            <img
+              src="assets/tongue.gif"
+              alt="A playful hamster reminding you to take a breath"
+            /><span>focus face: activated</span>
+          </div>
+          <div class="timer-ring">
+            <div>
+              <span id="timer">25:00</span
+              ><small id="timer-label">a little focus goes a long way</small>
+            </div>
+          </div>
+          <div class="timer-actions">
+            <button id="start" class="primary">
+              <i data-lucide="play" aria-hidden="true"></i> Start focus</button
+            ><button id="reset" aria-label="Reset timer">
+              <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+            </button>
+          </div>
+          <p id="session-note">Ready when you are.</p>
+        </section>
+        <section class="cheer-card">
+          <img
+            id="cheer-image"
+            src="assets/party.gif"
+            alt="Happy dancing hamster"
+          />
+          <div>
+            <span class="eyebrow">YOUR PERSONAL HYPE HAMSTER</span>
+            <h3 id="cheer-title">You can do hard things.</h3>
+            <p id="cheer-copy">And yes, taking a break counts too.</p>
+          </div>
+        </section>
+        <section class="clay">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">YOUR EFFORT ADDS UP</span>
+              <h2>This week's focus</h2>
+            </div>
+            <strong id="focus-total">0 sessions</strong>
+          </div>
+          <div id="focus-chart" class="focus-chart" role="img"></div>
+          <div id="subject-time" class="subject-time"></div>
+          <p class="muted">
+            Only completed 25-minute focus sessions are logged. Pauses and
+            breaks aren't counted.
+          </p>
+        </section>
+      </div>
+      <div data-panel="review" id="review-panel" hidden="">
+        <section class="clay">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">MAKE IT STICK</span>
+              <h2>Your flashcards</h2>
+            </div>
+            <button class="primary" id="card-add">
+              <i data-lucide="plus"></i>Add card
+            </button>
+          </div>
+          <div class="filter-label subject-picker">
+            <span id="subject-label">Subject</span
+            ><select id="card-filter" hidden aria-hidden="true" tabindex="-1">
+              <option value="">All subjects</option></select
+            ><button
+              id="subject-toggle"
+              type="button"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="subject-options"
+              aria-labelledby="subject-label subject-value"
+            >
+              <span id="subject-value">All subjects</span
+              ><i data-lucide="chevron-down" aria-hidden="true"></i>
+            </button>
+            <div
+              id="subject-options"
+              role="listbox"
+              aria-labelledby="subject-label"
+              hidden
+            ></div>
+          </div>
+          <form id="card-form" hidden="">
+            <label
+              >Subject<input
+                id="card-subject"
+                list="subjects"
+                required=""
+                maxlength="40"
+                placeholder="Pharma" /></label
+            ><label
+              >Question<textarea
+                id="card-question"
+                required=""
+                maxlength="500"
+                rows="2"
+              ></textarea></label
+            ><label
+              >Answer<textarea
+                id="card-answer"
+                required=""
+                maxlength="1000"
+                rows="3"
+              ></textarea>
+            </label>
+            <div class="form-actions">
+              <button type="button" id="card-cancel">Cancel</button
+              ><button type="submit" class="primary">Save card</button>
+            </div>
+          </form>
+          <p id="review-count" class="muted"></p>
+          <div id="review-card" class="review-card"></div>
+          <div class="review-actions">
+            <button id="card-reveal" class="primary">Show answer</button
+            ><button id="card-again" hidden="">Again</button
+            ><button id="card-got" class="primary" hidden="">
+              Got it <i data-lucide="check"></i>
+            </button>
+          </div>
+          <details class="card-library">
+            <summary>
+              <span
+                ><i data-lucide="library" aria-hidden="true"></i>Manage your
+                cards</span
+              ><i
+                data-lucide="chevron-down"
+                class="disclosure-chevron"
+                aria-hidden="true"
+              ></i>
+            </summary>
+            <div id="card-list" class="record-list"></div>
+          </details>
+        </section>
+        <section class="clay">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">QUICK REFERENCE</span>
+              <h2>Lab values</h2>
+            </div>
+            <i data-lucide="stethoscope"></i>
+          </div>
+          <p class="muted">
+            Adult study reference. Ranges vary by laboratory, age and clinical
+            context; use your course and local laboratory's ranges for clinical
+            work.
+          </p>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Test</th>
+                  <th>Reference range</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Sodium (Na)</td>
+                  <td>136–145 mEq/L</td>
+                </tr>
+                <tr>
+                  <td>Potassium (K)</td>
+                  <td>3.5–5.0 mEq/L</td>
+                </tr>
+                <tr>
+                  <td>Chloride (Cl)</td>
+                  <td>98–106 mEq/L</td>
+                </tr>
+                <tr>
+                  <td>Bicarbonate</td>
+                  <td>23–28 mEq/L</td>
+                </tr>
+                <tr>
+                  <td>Total calcium</td>
+                  <td>8.6–10.2 mg/dL</td>
+                </tr>
+                <tr>
+                  <td>BUN</td>
+                  <td>8–20 mg/dL</td>
+                </tr>
+                <tr>
+                  <td>Fasting glucose</td>
+                  <td>70–99 mg/dL</td>
+                </tr>
+                <tr>
+                  <td>Hemoglobin</td>
+                  <td>Female: 12–16 · Male: 14–18 g/dL</td>
+                </tr>
+                <tr>
+                  <td>White blood cells</td>
+                  <td>4,000–11,000 /µL</td>
+                </tr>
+                <tr>
+                  <td>Creatinine</td>
+                  <td>Female: 0.50–1.10 · Male: 0.70–1.30 mg/dL</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="source-link">
+            Source:
+            <a
+              href="https://www.abim.org/Media/bfijryql/laboratory-reference-ranges.pdf"
+              target="_blank"
+              rel="noopener"
+              >ABIM laboratory reference ranges (January 2026)</a
+            >.
+          </p>
+        </section>
+        <section class="clay">
+          <span class="eyebrow">PRACTICE, THEN CHECK</span>
+          <h2>Drug calculations</h2>
+          <div class="formula-grid">
+            <p>
+              <strong>Liquid volume (mL)</strong><br />Ordered dose ÷ available
+              dose × available volume
+            </p>
+            <p>
+              <strong>Infusion rate (mL/h)</strong><br />Total volume (mL) ÷
+              time (hours)
+            </p>
+            <p>
+              <strong>Drip rate (gtt/min)</strong><br />Volume (mL) × drop
+              factor (gtt/mL) ÷ time (minutes)
+            </p>
+          </div>
+          <p class="muted">
+            Match units first. Fictional exercises for study only; not a patient
+            dosing tool. Follow your instructor's rounding rules.
+          </p>
+          <p id="calc-question" class="practice-question"></p>
+          <form id="calc-form" class="inline-form">
+            <label
+              >Your answer (mL)<input
+                id="calc-answer"
+                type="number"
+                min="0"
+                step="any"
+                required="" /></label
+            ><button type="submit" class="primary">Check answer</button
+            ><button type="button" id="calc-new">New problem</button>
+          </form>
+          <p id="calc-result" role="status"></p>
+          <p class="source-link">
+            Method:
+            <a
+              href="https://openstax.org/books/clinical-nursing-skills/pages/11-2-dosing"
+              target="_blank"
+              rel="noopener"
+              >OpenStax Clinical Nursing Skills: Dosing</a
+            >.
+          </p>
+        </section>
+      </div>
+      <div data-panel="us" id="us-panel" hidden="">
+        <section class="clay">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">FROM AKY, WITH LOVE</span>
+              <h2>A note for today</h2>
+            </div>
+            <i data-lucide="notebook-pen"></i>
+          </div>
+          <p id="daily-note" class="daily-note"></p>
+          <button id="daily-open" class="primary">Open today's note</button>
+          <div class="open-when">
+            <h3>Open when…</h3>
+            <button data-open-when="tired">you're tired</button
+            ><button data-open-when="failed">a quiz didn't go your way</button
+            ><button data-open-when="passed">you passed!</button>
+          </div>
+        </section>
+        <section class="love-card" aria-labelledby="love-question">
+          <div class="love-copy">
+            <span class="eyebrow">A LITTLE QUESTION</span>
+            <h2 id="love-question">do you love me ba -aky?</h2>
+            <p id="love-answer" aria-live="polite">be honest, ganda &lt;3</p>
+          </div>
+          <div class="love-playground">
+            <button id="love-yes" class="primary">YES &lt;3</button>
+            <div id="dodge-field">
+              <button id="love-no" class="love-no">NO</button>
+            </div>
+          </div>
+        </section>
+        <section class="clay">
+          <span class="eyebrow">LITTLE THINGS YOU'VE EARNED</span>
+          <h2>Your unlocks</h2>
+          <div id="unlocks" class="unlock-grid"></div>
+        </section>
+      </div>
       <footer>
         <div class="footer-credit">
           Built with <i data-lucide="heart" aria-hidden="true"></i> by
           <strong>@akiakyo</strong>
         </div>
         <p>Goodluck my future nurse!</p>
+        <div>
+          <button id="install-app" class="text-button">
+            <i data-lucide="download"></i>Install Study Hub
+          </button>
+          <p id="install-help" class="muted" hidden=""></p>
+        </div>
       </footer>
     </main>
     <dialog id="aky-modal" aria-labelledby="aky-title">
@@ -263,10 +640,75 @@
           always rooting for you, <strong>aky &lt;3</strong>
         </div>
       </div>
-      <p id="paper-hint">hold & drag to crumple · release to unfold</p>
+      <p id="paper-hint">hold &amp; drag to crumple · release to unfold</p>
+    </dialog>
+    <dialog id="deadline-dialog" aria-labelledby="deadline-editor-title">
+      <div class="deadline-editor">
+        <div class="section-heading">
+          <h2 id="deadline-editor-title">Add a deadline</h2>
+          <button
+            id="deadline-close"
+            class="deadline-action"
+            aria-label="Close deadline editor"
+          >
+            <i data-lucide="x" aria-hidden="true"></i>
+          </button>
+        </div>
+        <form id="deadline-form">
+          <label for="deadline-title">Deadline</label
+          ><input
+            id="deadline-title"
+            maxlength="120"
+            placeholder="e.g. Anatomy practical exam"
+            required=""
+          /><label for="deadline-date">Due date</label
+          ><input id="deadline-date" type="date" required="" />
+          <fieldset class="deadline-colors">
+            <legend>Color</legend>
+            <label
+              ><input
+                type="radio"
+                name="deadline-color"
+                value="pink"
+                checked=""
+              />
+              Pink</label
+            ><label
+              ><input type="radio" name="deadline-color" value="red" />
+              Red</label
+            ><label
+              ><input type="radio" name="deadline-color" value="blue" />
+              Blue</label
+            ><label
+              ><input type="radio" name="deadline-color" value="purple" />
+              Purple</label
+            >
+          </fieldset>
+          <div class="form-actions">
+            <button id="deadline-cancel" type="button">Cancel</button
+            ><button type="submit" class="primary">Save deadline</button>
+          </div>
+        </form>
+      </div>
+    </dialog>
+    <dialog id="day-deadlines-dialog" aria-labelledby="day-deadlines-title">
+      <div class="day-deadlines-content">
+        <div class="section-heading"><div><span class="eyebrow">YOUR DEADLINES</span><h2 id="day-deadlines-title"></h2></div><button id="day-deadlines-close" class="deadline-action" aria-label="Close day deadlines"><i data-lucide="x" aria-hidden="true"></i></button></div>
+        <p id="day-deadlines-count" class="muted"></p><div id="day-deadlines-list"></div><button id="day-deadlines-add" class="primary"><i data-lucide="plus" aria-hidden="true"></i>Add deadline for this day</button>
+      </div>
     </dialog>
     <div id="toast" role="status" aria-live="polite"></div>
     <script src="assets/lucide.min.js"></script>
     <script type="module" src="js/app.js"></script>
+
+    <datalist id="subjects">
+      <option value="Anatomy"></option>
+      <option value="Pharma"></option>
+      <option value="NCM"></option>
+      <option value="Microbiology"></option>
+      <option value="Pathophysiology"></option>
+      <option value="Fundamentals"></option>
+      <option value="Board review"></option>
+    </datalist>
   </body>
 </html>

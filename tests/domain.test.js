@@ -81,3 +81,21 @@ test("counter formats minute boundaries and break durations", () => {
   ])
     assert.equal(counter.timerText(value), text);
 });
+
+import { DeadlineCalendar } from "../public/js/DeadlineCalendar.js";
+test("deadline date validation rejects impossible calendar dates", () => {
+  assert.equal(DeadlineCalendar.validDate("2026-04-30"), true);
+  assert.equal(DeadlineCalendar.validDate("2026-04-31"), false);
+  assert.equal(DeadlineCalendar.validDate("2026-02-29"), false);
+  assert.equal(DeadlineCalendar.validDate("2028-02-29"), true);
+});
+test("May calendar includes the screenshot deadlines across adjacent months", () => {
+  const days = DeadlineCalendar.gridDates(new Date(2026, 4, 1));
+  assert.equal(days.length, 42);
+  assert.equal(days[0].getDay(), 0);
+  const keys = days.map(
+    (d) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`,
+  );
+  for (const item of DeadlineCalendar.seeds()) assert(keys.includes(item.date));
+});
