@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f7b9cc" />
+    <meta
+      name="description"
+      content="CJ's cozy daily study planner. Plan small, focus, and celebrate your progress."
+    />
+    <link rel="icon" type="image/png" href="assets/logo.png" />
+    <link rel="apple-touch-icon" href="assets/logo.png" />
+    <title>CJ's Study Hub</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="assets/paper-crumple.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="./"
+        ><img
+          class="site-logo"
+          src="assets/logo.png"
+          alt="CJ’s Study Hub hamster logo"
+        />
+        CJ's Study Hub<span class="brand-dot">.</span></a
+      >
+      <div class="header-actions">
+        <button
+          id="sound-toggle"
+          class="sound-toggle"
+          aria-label="Mute sounds"
+          aria-pressed="true"
+        >
+          <i data-lucide="volume-2" aria-hidden="true"></i></button
+        ><button id="aky-open" class="aky-button">
+          <i data-lucide="mail" aria-hidden="true"></i> from aky :)
+        </button>
+      </div>
+    </header>
+    <main>
+      <div class="intro">
+        <div>
+          <h1>Small steps.<br /><em>Big brain energy.</em></h1>
+          <p>Hi, my future nurse! Let's make today a good study day.</p>
+        </div>
+        <div class="intro-sticker">
+          <img src="assets/smirk.gif" alt="A cheeky white hamster" /><span
+            >u got this, ganda &lt;3</span
+          >
+        </div>
+      </div>
+      <div class="day-bar">
+        <button id="prev-day" aria-label="Previous day">
+          <i data-lucide="chevron-left" aria-hidden="true"></i>
+        </button>
+        <div>
+          <strong id="day-title">Today</strong><span id="date-label"></span>
+        </div>
+        <button id="next-day" aria-label="Next day">
+          <i data-lucide="chevron-right" aria-hidden="true"></i></button
+        ><button id="today" class="today-button">Back to today</button>
+        <div class="streak-wrap">
+          <button
+            id="streak"
+            class="streak"
+            aria-expanded="false"
+            aria-describedby="streak-tip"
+          >
+            <i data-lucide="flame" aria-hidden="true"></i
+            ><strong id="streak-count">0</strong>
+          </button>
+          <div id="streak-tip" class="streak-tip" role="tooltip">
+            <strong id="streak-detail">0 day streak</strong
+            ><span id="streak-hint">Complete a task today to start.</span>
+          </div>
+        </div>
+      </div>
+      <div class="workspace">
+        <section class="planner">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">THE DAILY GAME PLAN</span>
+              <h2>Study tasks <span id="task-count">0</span></h2>
+            </div>
+            <button class="primary" id="add-open">
+              <i data-lucide="plus" aria-hidden="true"></i> Add a task
+            </button>
+          </div>
+          <div class="progress-panel">
+            <div>
+              <span>Today's little wins</span
+              ><strong id="progress-text">0 of 0 done</strong>
+            </div>
+            <div class="progress-track"><div id="progress-fill"></div></div>
+          </div>
+          <div class="filters" role="group" aria-label="Filter tasks">
+            <button class="active" data-filter="all">All tasks</button
+            ><button data-filter="pending">To do</button
+            ><button data-filter="done">Completed</button>
+          </div>
+          <form id="task-form" hidden>
+            <label for="task-title">What are we working on?</label
+            ><input
+              id="task-title"
+              placeholder="e.g. Review chapter 3"
+              maxlength="120"
+              required
+            />
+            <div class="form-row">
+              <label
+                >Subject<input
+                  id="task-subject"
+                  placeholder="e.g. Mathematics"
+                  maxlength="40"
+              /></label>
+              <div class="priority-field">
+                <label id="priority-label">Priority</label
+                ><input type="hidden" id="task-priority" value="normal" />
+                <div class="custom-select">
+                  <button
+                    type="button"
+                    id="priority-toggle"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-labelledby="priority-label priority-value"
+                  >
+                    <span id="priority-value">Normal</span
+                    ><i data-lucide="chevron-down" aria-hidden="true"></i>
+                  </button>
+                  <div
+                    id="priority-options"
+                    role="listbox"
+                    aria-labelledby="priority-label"
+                    hidden
+                  >
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected="true"
+                      data-priority="normal"
+                    >
+                      Normal</button
+                    ><button
+                      type="button"
+                      role="option"
+                      aria-selected="false"
+                      data-priority="high"
+                    >
+                      High</button
+                    ><button
+                      type="button"
+                      role="option"
+                      aria-selected="false"
+                      data-priority="low"
+                    >
+                      Low
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" id="cancel">Cancel</button
+              ><button class="primary" type="submit">Save task</button>
+            </div>
+          </form>
+          <div id="tasks"></div>
+          <div class="planner-bottom">
+            <img
+              class="comfort-sticker"
+              src="assets/cry.gif"
+              alt="A teary-eyed hamster offering a little encouragement"
+            />
+            <p>Your pace is a good pace. Keep going.</p>
+          </div>
+        </section>
+        <aside>
+          <section class="focus-card">
+            <div class="section-heading">
+              <h2>Time to focus</h2>
+              <span><i data-lucide="clock-3" aria-hidden="true"></i></span>
+            </div>
+            <div class="timer-tabs">
+              <button class="active" data-minutes="25">Focus</button
+              ><button data-minutes="5">Short break</button
+              ><button data-minutes="15">Long break</button>
+            </div>
+            <div class="focus-buddy">
+              <img
+                src="assets/tongue.gif"
+                alt="A playful hamster reminding you to take a breath"
+              /><span>focus face: activated</span>
+            </div>
+            <div class="timer-ring">
+              <div>
+                <span id="timer">25:00</span
+                ><small id="timer-label">a little focus goes a long way</small>
+              </div>
+            </div>
+            <div class="timer-actions">
+              <button id="start" class="primary">
+                <i data-lucide="play" aria-hidden="true"></i> Start focus</button
+              ><button id="reset" aria-label="Reset timer">
+                <i data-lucide="rotate-ccw" aria-hidden="true"></i>
+              </button>
+            </div>
+            <p id="session-note">Ready when you are.</p>
+          </section>
+          <section class="cheer-card">
+            <img
+              id="cheer-image"
+              src="assets/party.gif"
+              alt="Happy dancing hamster"
+            />
+            <div>
+              <span class="eyebrow">YOUR PERSONAL HYPE HAMSTER</span>
+              <h3 id="cheer-title">You can do hard things.</h3>
+              <p id="cheer-copy">And yes, taking a break counts too.</p>
+            </div>
+          </section>
+        </aside>
+      </div>
+      <section class="love-card" aria-labelledby="love-question">
+        <div class="love-copy">
+          <span class="eyebrow">A LITTLE QUESTION</span>
+          <h2 id="love-question">do you love me ba -aky?</h2>
+          <p id="love-answer" aria-live="polite">be honest, ganda &lt;3</p>
+        </div>
+        <div class="love-playground">
+          <button id="love-yes" class="primary">YES &lt;3</button>
+          <div id="dodge-field">
+            <button id="love-no" class="love-no">NO</button>
+          </div>
+        </div>
+      </section>
+      <footer>
+        <div class="footer-credit">
+          Built with <i data-lucide="heart" aria-hidden="true"></i> by
+          <strong>@akiakyo</strong>
+        </div>
+        <p>Goodluck my future nurse!</p>
+      </footer>
+    </main>
+    <dialog id="aky-modal" aria-labelledby="aky-title">
+      <button id="aky-close" aria-label="Close note">
+        <i data-lucide="x" aria-hidden="true"></i>
+      </button>
+      <div id="paper-stage" class="paper-crumple">
+        <canvas class="paper-crumple-canvas" aria-hidden="true"></canvas
+        ><button
+          class="paper-crumple-hit"
+          type="button"
+          aria-label="Hold to crumple the note and drag. Release to flatten. Keyboard: hold Space or Enter, arrows to move, Escape to reset."
+          aria-pressed="false"
+        ></button
+        ><span class="paper-crumple-focus" aria-hidden="true"></span>
+      </div>
+      <div class="note-paper">
+        <span class="note-tape" aria-hidden="true"></span>
+        <h2 id="aky-title">from aky :)</h2>
+        <p id="aky-message">kaya mo yan baby</p>
+        <div class="note-signature">
+          always rooting for you, <strong>aky &lt;3</strong>
+        </div>
+      </div>
+      <p id="paper-hint">hold & drag to crumple · release to unfold</p>
+    </dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="assets/lucide.min.js"></script>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>
